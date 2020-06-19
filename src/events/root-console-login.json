@@ -1,0 +1,28 @@
+{
+    "eventVersion": "1.05",
+    "userIdentity": {
+        "type": "Root",
+        "principalId": "864419182307",
+        "arn": "arn:aws:iam::864419182307:root",
+        "accountId": "864419182307",
+        "accessKeyId": ""
+    },
+    "eventTime": "2020-06-18T16:22:08Z",
+    "eventSource": "signin.amazonaws.com",
+    "eventName": "ConsoleLogin",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "202.80.214.161",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.92 Safari/537.36",
+    "requestParameters": null,
+    "responseElements": {
+        "ConsoleLogin": "Success"
+    },
+    "additionalEventData": {
+        "LoginTo": "https://ap-southeast-1.console.aws.amazon.com/cloudtrail/home?region=ap-southeast-1&state=hashArgs%23%2Fconfiguration%2Farn%3Aaws%3Acloudtrail%3Aap-southeast-1%3A864419182307%3Atrail%40serverlessid-sg-trail&isauthcode=true",
+        "MobileVersion": "No",
+        "MFAUsed": "Yes"
+    },
+    "eventID": "26296cc5-c917-492d-ac5e-db338d27be50",
+    "eventType": "AwsConsoleSignIn",
+    "recipientAccountId": "864419182307"
+}

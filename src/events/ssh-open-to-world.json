@@ -1,0 +1,47 @@
+{
+    "eventVersion": "1.05",
+    "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDA4SQ3F63RQT2Y7A7HK",
+        "arn": "arn:aws:iam::864419182307:user/fajriserverless",
+        "accountId": "864419182307",
+        "accessKeyId": "AKIA4SQ3F63RRBQLYHTG",
+        "userName": "fajriserverless"
+    },
+    "eventTime": "2020-06-18T04:58:27Z",
+    "eventSource": "ec2.amazonaws.com",
+    "eventName": "AuthorizeSecurityGroupIngress",
+    "awsRegion": "ap-southeast-1",
+    "sourceIPAddress": "202.80.214.161",
+    "userAgent": "aws-sdk-go/1.31.2 (go1.13.7; linux; amd64) APN/1.0 HashiCorp/1.0 Terraform/0.12.25 (+https://www.terraform.io)",
+    "requestParameters": {
+        "groupId": "sg-05a4e22c208ded49f",
+        "ipPermissions": {
+            "items": [
+                {
+                    "ipProtocol": "tcp",
+                    "fromPort": 22,
+                    "toPort": 22,
+                    "groups": {},
+                    "ipRanges": {
+                        "items": [
+                            {
+                                "cidrIp": "0.0.0.0/0"
+                            }
+                        ]
+                    },
+                    "ipv6Ranges": {},
+                    "prefixListIds": {}
+                }
+            ]
+        }
+    },
+    "responseElements": {
+        "requestId": "9c4acdbc-024e-4c23-8bba-0be5d98bd7d4",
+        "_return": true
+    },
+    "requestID": "9c4acdbc-024e-4c23-8bba-0be5d98bd7d4",
+    "eventID": "dfa8864d-888e-4760-bbee-b573395ed51e",
+    "eventType": "AwsApiCall",
+    "recipientAccountId": "864419182307"
+}
