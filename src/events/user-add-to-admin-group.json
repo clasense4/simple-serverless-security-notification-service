@@ -1,0 +1,33 @@
+{
+    "eventVersion": "1.05",
+    "userIdentity": {
+        "type": "Root",
+        "principalId": "864419182307",
+        "arn": "arn:aws:iam::864419182307:root",
+        "accountId": "864419182307",
+        "accessKeyId": "ASIA4SQ3F63R5ZYUYWHO",
+        "sessionContext": {
+            "sessionIssuer": {},
+            "webIdFederationData": {},
+            "attributes": {
+                "mfaAuthenticated": "true",
+                "creationDate": "2020-06-19T16:41:12Z"
+            }
+        }
+    },
+    "eventTime": "2020-06-19T23:42:06Z",
+    "eventSource": "iam.amazonaws.com",
+    "eventName": "AddUserToGroup",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "128.199.253.143",
+    "userAgent": "console.amazonaws.com",
+    "requestParameters": {
+        "groupName": "administrator",
+        "userName": "administratorgoat"
+    },
+    "responseElements": null,
+    "requestID": "a0bf6f24-f0a9-45b1-bd1f-cb18daf68421",
+    "eventID": "b1c59fca-703e-4ead-8ca7-1516522b9c5b",
+    "eventType": "AwsApiCall",
+    "recipientAccountId": "864419182307"
+}
