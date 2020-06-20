@@ -2,6 +2,31 @@ import os
 import json
 import requests
 import jmespath
+import gzip
+import base64
+
+
+def lambda_handler(event, context):
+    print(event)
+    base64_decoded = base64.b64decode(event['awslogs']['data'])
+    plain_string  = gzip.decompress(base64_decoded).decode("utf-8")
+    log_events = json.loads(plain_string)['logEvents']
+    print('Event count: ' + str(len(log_events)))
+    for event in log_events:
+        # print(event['message'])
+        queries = {
+            'ssh-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && fromPort == `22` && toPort == `22` && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
+            'non-standard-port-is-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && ((fromPort != `22` && toPort != `22`) && (fromPort != `80` && toPort != `80`) && (fromPort != `443` && toPort != `443`)) && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
+            'root-console-login':'eventName == `ConsoleLogin` && userIdentity.type == `Root`',
+            'new-user-added-to-administrator-group':'eventName == `AddUserToGroup` && requestParameters.groupName == `administrator`',
+        }
+
+        for query in queries:
+            path = jmespath.search(queries[query], event)
+            if path:
+                print(query + " is found!")
+                send_slack_message(query, json.dumps(event, indent=4))
+
 
 def send_slack_message(event_type, json_message):
     # https://gist.github.com/devStepsize/b1b795309a217d24566dcc0ad136f784
@@ -16,7 +41,7 @@ def send_slack_message(event_type, json_message):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "New security event : *" + event_type + "* :warning: @here"
+                    "text": "New security event detected : *" + event_type + "* :warning: @here"
                 }
             },
             {
@@ -38,26 +63,3 @@ def send_slack_message(event_type, json_message):
             'Request to slack returned an error %s, the response is:\n%s'
             % (response.status_code, response.text)
         )
-
-events = {
-    1 : 'events/ssh-open-to-world.json',
-    2 : 'events/port-8080-open-to-world.json',
-    3 : 'events/root-console-login.json',
-    4 : 'events/user-add-to-admin-group.json'
-}
-
-with open(events[4]) as f:
-    event = json.load(f)
-
-queries = {
-    'ssh-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && fromPort == `22` && toPort == `22` && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
-    'non-standard-port-is-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && ((fromPort != `22` && toPort != `22`) && (fromPort != `80` && toPort != `80`) && (fromPort != `443` && toPort != `443`)) && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
-    'root-console-login':'eventName == `ConsoleLogin` && userIdentity.type == `Root`',
-    'new-user-added-to-administrator-group':'eventName == `AddUserToGroup` && requestParameters.groupName == `administrator`',
-}
-
-for query in queries:
-    path = jmespath.search(queries[query], event)
-    if path:
-        print(query + " is found!")
-        send_slack_message(query, json.dumps(event, indent=4))
