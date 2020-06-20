@@ -8,7 +8,7 @@ webhook_url = os.environ['WEBHOOK_URL']
 slack_data = {
     'username': 'securitybot',
     'icon_emoji': 'ghost',
-    'text': "This is a security message :warning:"
+    'text': "This is a security message :warning: <!here>"
 }
 
 response = requests.post(
