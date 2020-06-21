@@ -1,3 +1,7 @@
 .terraform
 *.tfstate
 *.tfstate.backup
+*.zip
+.venv
+.vscode
+package/
