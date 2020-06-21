@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     log_events = json.loads(plain_string)['logEvents']
     print('Event count: ' + str(len(log_events)))
     for event in log_events:
-        # print(event['message'])
+        print(event['message'])
         queries = {
             'ssh-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && fromPort == `22` && toPort == `22` && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
             'non-standard-port-is-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && ((fromPort != `22` && toPort != `22`) && (fromPort != `80` && toPort != `80`) && (fromPort != `443` && toPort != `443`)) && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
@@ -22,10 +22,11 @@ def lambda_handler(event, context):
         }
 
         for query in queries:
-            path = jmespath.search(queries[query], event)
+            event_dict = json.loads(event['message'])
+            path = jmespath.search(queries[query], event_dict)
             if path:
                 print(query + " is found!")
-                send_slack_message(query, json.dumps(event, indent=4))
+                send_slack_message(query, json.dumps(event_dict, indent=4))
 
 
 def send_slack_message(event_type, json_message):
