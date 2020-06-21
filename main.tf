@@ -20,7 +20,6 @@ data "aws_region" "current" {}
 resource "aws_cloudtrail" "trail" {
   name                          = var.project
   s3_bucket_name                = aws_s3_bucket.bucket.id
-  include_global_service_events = false
   cloud_watch_logs_group_arn    = aws_cloudwatch_log_group.log_group_trail.arn
   cloud_watch_logs_role_arn     = aws_iam_role.role_trail.arn
 }
@@ -147,9 +146,9 @@ resource "aws_lambda_layer_version" "layer" {
 
 resource "aws_cloudwatch_log_subscription_filter" "lambda_cloudwatch" {
   name            = "${var.project}-lambda"
-  log_group_name  = "${aws_cloudwatch_log_group.log_group_trail.name}"
+  log_group_name  = aws_cloudwatch_log_group.log_group_trail.name
   filter_pattern  = ""
-  destination_arn = "${aws_lambda_function.lambda.arn}"
+  destination_arn = aws_lambda_function.lambda.arn
 }
 
 resource "aws_lambda_permission" "test-app-allow-cloudwatch" {
