@@ -18,10 +18,11 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 resource "aws_cloudtrail" "trail" {
-  name                          = var.project
-  s3_bucket_name                = aws_s3_bucket.bucket.id
-  cloud_watch_logs_group_arn    = aws_cloudwatch_log_group.log_group_trail.arn
-  cloud_watch_logs_role_arn     = aws_iam_role.role_trail.arn
+  name                       = var.project
+  s3_bucket_name             = aws_s3_bucket.bucket.id
+  cloud_watch_logs_group_arn = aws_cloudwatch_log_group.log_group_trail.arn
+  cloud_watch_logs_role_arn  = aws_iam_role.role_trail.arn
+  include_management_events  = true
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -86,8 +87,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "policy" {
-  name = "${var.project}-policy"
-  role = aws_iam_role.role_trail.id
+  name   = "${var.project}-policy"
+  role   = aws_iam_role.role_trail.id
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -184,8 +185,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "policy_lambda" {
-  name = "${var.project}-lambda-policy"
-  role = aws_iam_role.role_lambda.id
+  name   = "${var.project}-lambda-policy"
+  role   = aws_iam_role.role_lambda.id
   policy = <<EOF
 {
     "Version": "2012-10-17",
