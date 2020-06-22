@@ -131,6 +131,10 @@ resource "aws_lambda_function" "lambda" {
   memory_size      = 128
   layers           = ["${aws_lambda_layer_version.layer.arn}"]
 
+  dead_letter_config {
+    target_arn = aws_sqs_queue.dlq.arn
+  }
+
   environment {
     variables = {
       WEBHOOK_URL = var.webhook_url
@@ -200,8 +204,33 @@ resource "aws_iam_role_policy" "policy_lambda" {
             "Resource": [
                 "${aws_cloudwatch_log_group.log_group_lambda.arn}"
             ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sqs:SendMessage"
+            ],
+            "Resource": [
+                "${aws_sqs_queue.dlq.arn}"
+            ]
         }
     ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution_policy_attachement" {
+  role       = "${aws_iam_role.role_lambda.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_sqs_queue" "dlq" {
+  name                      = "${var.project}-queue"
+  message_retention_seconds = 1209600
+}
+
+resource "aws_lambda_function_event_invoke_config" "example" {
+  function_name                = aws_lambda_function.lambda.function_name
+  maximum_event_age_in_seconds = 60
+  maximum_retry_attempts       = 0
 }
