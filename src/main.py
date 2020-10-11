@@ -14,6 +14,7 @@ def lambda_handler(event, context):
     print('Event count: ' + str(len(log_events)))
     for event in log_events:
         print(event['message'])
+        # rule
         queries = {
             'ssh-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && fromPort == `22` && toPort == `22` && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
             'non-standard-port-is-open-to-world':'requestParameters.ipPermissions.items[?ipProtocol == `tcp` && ((fromPort != `22` && toPort != `22`) && (fromPort != `80` && toPort != `80`) && (fromPort != `443` && toPort != `443`)) && ipRanges.items[?cidrIp==`0.0.0.0/0`]]',
@@ -34,6 +35,7 @@ def send_slack_message(event_type, json_message):
     webhook_url = os.environ['WEBHOOK_URL']
 
     slack_data = {
+        "channel": "#aws-security",
         "username": "securitybot",
         "icon_emoji": "ghost",
         "text": "New security event",

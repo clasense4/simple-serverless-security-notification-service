@@ -5,13 +5,12 @@ provider "aws" {
 variable "project" {
   description = "Project Name"
   type        = string
-  default     = "demo-aws-ug"
+  default     = "ssns"
 }
 
 variable "webhook_url" {
   description = "Slack Webhook URL"
   type        = string
-  default     = "https://hooks.slack.com/services/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"
 }
 
 data "aws_caller_identity" "current" {}
@@ -26,7 +25,7 @@ resource "aws_cloudtrail" "trail" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket        = "${var.project}-trail"
+  bucket        = "${lower(var.project)}-trail"
   force_destroy = true
 
   policy = <<POLICY
@@ -220,13 +219,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic_execution_policy_attachement" {
-  role       = "${aws_iam_role.role_lambda.name}"
+  role       = aws_iam_role.role_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 resource "aws_sqs_queue" "dlq" {
   name                      = "${var.project}-queue"
-  message_retention_seconds = 1209600
+  message_retention_seconds = 1209600 # 14hari
 }
 
 resource "aws_lambda_function_event_invoke_config" "example" {
